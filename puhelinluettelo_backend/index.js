@@ -1,21 +1,14 @@
-// Teht 3.6 puhelinluettelon backend step6
-// uuden henkilön lisäyksen yhteydessä error-viestit:
-// 1. nimi tai numero puuttuu
-// 2. nimi on jo luettelossa
-// testattu REST'in avulla toimivaksi
-
-// Teht 3.5 puhelinluettelon backend step5
-// mahdollistetaan tietojen lisääminen HTTP POST-req
-// osoitteeseen http://localhost:3001/api/persons
-// id generoidaan Math.randomilla
-// toiminnallisuus oli jo aiemmin
-// testattu HTTP POST-req toiminta
-
+// Teht 3.7 puhelinluettelon backend step7
+// lisätään middleware morgan
+// konffataan se loggaamaan konsoliin tiny-konfiguraatiota
+// morgan todettu toimivaksi konsolissa
 
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [  
   {    
