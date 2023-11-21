@@ -1,6 +1,7 @@
-// Teht 3.1 puhelinluettelon backend step1
-// tehdään Node-sovellus, joka tarjoaa kovakoodatun puhelinluettelos
-// osoitteessa http://localhost:3001/api/persons
+// Teht 3.2 puhelinluettelon backend step2
+// tehdään sivu: http://localhost:3001/info
+// jossa kerrotaan henkilöiden määrä puhelinluettelossa
+// ja pyynnön tekohetki
 
 const express = require('express')
 const app = express()
@@ -66,6 +67,14 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
+app.get('/api/info', (request, response) => {
+  const numberOfContacts = persons.length
+  const dateAtnow = new Date()
+  const msg = `Phonebook has info for ${numberOfContacts} people\n` + `${dateAtnow}\n`
+
+  response.set('Content-Type', 'text/plain')
+  response.send(msg)
+})
 
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
