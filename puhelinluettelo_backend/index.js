@@ -1,14 +1,23 @@
-// Teht 3.7 puhelinluettelon backend step7
-// lisätään middleware morgan
-// konffataan se loggaamaan konsoliin tiny-konfiguraatiota
-// morgan todettu toimivaksi konsolissa
+// Teht 3.8 puhelinluettelon backend step8
+// konffataan morgan näyttämään HTTP POST-req mukana tuleva data tokenin avulla
+// testattu morgan-konfin toiminta HTTP POST-requestilla
+// konsoliin tulostuu oikein:
+// POST /api/persons 200 55 - 2.902 ms {"name":"Vladimir Putin","number":"666-666-666"}
 
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
-app.use(express.json())
-app.use(morgan('tiny'))
+app.use(express.json((req, res, data) => {
+  req.rawBody = data.toString();
+}))
+
+morgan.token('body', (req) => {
+  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
 
 let persons = [  
   {    
