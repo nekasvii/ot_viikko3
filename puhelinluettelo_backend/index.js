@@ -1,7 +1,8 @@
-// Teht 3.3 puhelinluettelon backend step3
-// tarkistetaan yksittäisen ihmisen näyttäminen sivulla
-// http://localhost:3001/api/persons/1
-// ja todettu sen olevan jo step1 jäljiltä valmiina
+// Teht 3.4 puhelinluettelon backend step4
+// mahdollistetaan henkilön poisto HTTP DELETE -requestilla
+// toiminnallisuus testattu VSCoden REST'illä
+// DELETE-req palauttaa 204 ja GET'illä näkee tiedon poistuneen
+
 
 const express = require('express')
 const app = express()
