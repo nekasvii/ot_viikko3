@@ -1,7 +1,15 @@
-// Teht 3.4 puhelinluettelon backend step4
-// mahdollistetaan henkilön poisto HTTP DELETE -requestilla
-// toiminnallisuus testattu VSCoden REST'illä
-// DELETE-req palauttaa 204 ja GET'illä näkee tiedon poistuneen
+// Teht 3.6 puhelinluettelon backend step6
+// uuden henkilön lisäyksen yhteydessä error-viestit:
+// 1. nimi tai numero puuttuu
+// 2. nimi on jo luettelossa
+// testattu REST'in avulla toimivaksi
+
+// Teht 3.5 puhelinluettelon backend step5
+// mahdollistetaan tietojen lisääminen HTTP POST-req
+// osoitteeseen http://localhost:3001/api/persons
+// id generoidaan Math.randomilla
+// toiminnallisuus oli jo aiemmin
+// testattu HTTP POST-req toiminta
 
 
 const express = require('express')
@@ -45,6 +53,14 @@ app.post('/api/persons', (request, response) => {
   if (!body.name || !body.number) {
     return response.status(400).json({ 
       error: 'name or number missing' 
+    })
+  }
+
+  const dublicatePerson = persons.find((person) => person.name === body.name)
+
+  if (dublicatePerson) {
+    return response.status(400).json({
+      error: 'name must be unique'
     })
   }
 
