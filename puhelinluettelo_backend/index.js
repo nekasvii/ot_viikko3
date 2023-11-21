@@ -1,7 +1,7 @@
-// Teht 3.2 puhelinluettelon backend step2
-// tehdään sivu: http://localhost:3001/info
-// jossa kerrotaan henkilöiden määrä puhelinluettelossa
-// ja pyynnön tekohetki
+// Teht 3.3 puhelinluettelon backend step3
+// tarkistetaan yksittäisen ihmisen näyttäminen sivulla
+// http://localhost:3001/api/persons/1
+// ja todettu sen olevan jo step1 jäljiltä valmiina
 
 const express = require('express')
 const app = express()
