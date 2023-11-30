@@ -1,4 +1,4 @@
-// Teht 3.9 puhelinluettelon backend step9
+// Teht 3.9 puhelinluettelon backend step8
 // puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
 // eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
 // muokattu info sivun osoite ./info oli ./api/info
