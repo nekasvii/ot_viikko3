@@ -2,6 +2,10 @@
 // puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
 // eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
 // muokattu info sivun osoite ./info oli ./api/info
+// tehty tuotantoa varten optimoitu versio frontendistä dist-kansioon
+// ja määritelty se backend-versioon
+// viety sovellus nettiin oss: https://puhelinluettelo-fullstack3.onrender.com/
+// lomakkeen haku toimii, muttei lisäys, numeromuutos tai poisto
 
 const express = require('express')
 const morgan = require('morgan')
