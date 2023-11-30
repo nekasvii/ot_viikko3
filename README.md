@@ -1,8 +1,13 @@
-# React + Vite
+# Puhelinliettelo Fullstack
+author: Nelli Sviili
+version 30.11.2023
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tehtävässä on toteutettu puhelinluettelo, joka toimii 
+paikallisesti ja internetissä Renderissä osoitteessa:
+https://puhelinluettelo-fullstack3.onrender.com/
 
-Currently, two official plugins are available:
+projektin repo: 
+https://github.com/nekasvii/ot_viikko3
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Sovellus on kirjoitettu JavaScriptillä
+Apuna myös mm. React ja Node.js
