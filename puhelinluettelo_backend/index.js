@@ -1,8 +1,7 @@
-// Teht 3.8 puhelinluettelon backend step8
-// konffataan morgan näyttämään HTTP POST-req mukana tuleva data tokenin avulla
-// testattu morgan-konfin toiminta HTTP POST-requestilla
-// konsoliin tulostuu oikein:
-// POST /api/persons 200 55 - 2.902 ms {"name":"Vladimir Putin","number":"666-666-666"}
+// Teht 3.9 puhelinluettelon backend step8
+// puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
+// eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
+// muokattu info sivun osoite ./info oli ./api/info
 
 const express = require('express')
 const morgan = require('morgan')
@@ -49,6 +48,7 @@ const generateId = () => {
   return maxId + 1
 }
 
+// henkilön lisäys
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -78,15 +78,18 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
+// etusivu
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
+// tallennetut henkilöt JSON
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-app.get('/api/info', (request, response) => {
+// info page
+app.get('/info', (request, response) => {
   const numberOfContacts = persons.length
   const dateAtnow = new Date()
   const msg = `Phonebook has info for ${numberOfContacts} people\n` + `${dateAtnow}\n`
@@ -95,6 +98,7 @@ app.get('/api/info', (request, response) => {
   response.send(msg)
 })
 
+// tallennettu henkilö indeksissä x
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
@@ -105,6 +109,7 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
+// henkilön poisto
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
