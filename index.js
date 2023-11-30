@@ -1,7 +1,6 @@
 // Teht 3.9 puhelinluettelon backend step8
 // puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
 // eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
-// muokattu info sivun osoite ./info oli ./api/info
 // tehty tuotantoa varten optimoitu versio frontendistä dist-kansioon
 // ja määritelty se backend-versioon
 // viety sovellus nettiin oss: https://puhelinluettelo-fullstack3.onrender.com/
@@ -54,7 +53,7 @@ const generateId = () => {
 }
 
 // henkilön lisäys
-app.post('/api/persons', (request, response) => {
+app.post('/persons', (request, response) => {
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -89,7 +88,7 @@ app.get('/', (req, res) => {
 })
 
 // tallennetut henkilöt JSON
-app.get('/api/persons', (request, response) => {
+app.get('/persons', (request, response) => {
   response.json(persons)
 })
 
@@ -104,7 +103,7 @@ app.get('/info', (request, response) => {
 })
 
 // tallennettu henkilö indeksissä x
-app.get('/api/persons/:id', (request, response) => {
+app.get('/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   if (person) {    
@@ -115,7 +114,7 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 // henkilön poisto
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
   
