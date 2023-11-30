@@ -1,10 +1,12 @@
-// Teht 3.9 puhelinluettelon backend step8
+// Teht 3.9-3.11 puhelinluettelon backend step9-11
 // puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
 // eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
 // tehty tuotantoa varten optimoitu versio frontendistä dist-kansioon
 // ja määritelty se backend-versioon
 // viety sovellus nettiin oss: https://puhelinluettelo-fullstack3.onrender.com/
-// lomakkeen haku toimii, muttei lisäys, numeromuutos tai poisto
+// nyt toimii kaikki operaatiot, mutta lokaalin serverin ollessa päällä
+// lokaalin serverin ollessä kiinni sivun tiedot eivät päivity
+// käsittääkseni tässä vaiheessa ok tilanne
 
 const express = require('express')
 const morgan = require('morgan')
