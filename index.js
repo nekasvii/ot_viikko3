@@ -8,15 +8,20 @@
 // lisätty henkilön poisto
 // kaikki request testit OK
 // lisätty yksittäisen henkilön näyttäminen
+// renderin kanssa ongelmaa MongoDB salasanan takia
+// -> ratkottu tallentamalla Renderiin uri ympäristömuuttujana
 
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const mongoose = require('mongoose')
 require('dotenv').config() // ympäristömuuttuja käyttöön ennen ./models/person importtia
 
 const Person = require('./models/person') // ottaa modulin käyttöön
 
+app.use(cors())
 app.use(express.json())
+app.use(express.static('dist'))
 /*
 morgan.token('body', (req) => {
   return req.method === 'POST' ? JSON.stringify(req.body) : ''
