@@ -37,7 +37,7 @@ if (process.argv.length === 3) { // jos on yksi argumentti
 } else if (process.argv.length === 5) { // jos on 3 argumenttia
     const person = new Person({
         name: process.argv[3],
-        phonenumber: process.argv[4],
+        number: process.argv[4],
     })
 
     person.save().then(() => {

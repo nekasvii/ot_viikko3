@@ -4,38 +4,27 @@
 // step2 puh.numerot myös tallennetaan tietokantaan 
 // luotu oma moduulinsa ./models/person 
 // tallennettu ympäristömuuttuja MONGODB_URI .env tiedostoon ja gitignorattu se
+// info-sivun kontaktien lkm-haku päivitetty MongoDB:lle
+// creating_new_person ja get_all_persons -testit OK
 
-require('dotenv').config() // ympäristömuuttuja käyttöön ennen ./models/person importtia
 const express = require('express')
-const morgan = require('morgan')
 const app = express()
 const mongoose = require('mongoose')
+require('dotenv').config() // ympäristömuuttuja käyttöön ennen ./models/person importtia
 
 const Person = require('./models/person') // ottaa modulin käyttöön
 
-// app.use(express.json((req, res, data) => {
-//   req.rawBody = data.toString();
-// }))
+app.use(express.json())
+/*
+morgan.token('body', (req) => {
+  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
 
-// morgan.token('body', (req) => {
-//   return req.method === 'POST' ? JSON.stringify(req.body) : ''
-// })
-
-// app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 const url = process.env.MONGODB_URI // url haetaan ympäristömuuttujasta
 console.log('connecting to', url)
-
-mongoose.connect(url) // yhdistetään haettuun urliin
-  .then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
-
-mongoose.set('strictQuery', false)
-mongoose.connect(url)
+*/
 
 const PORT = process.env.PORT // portin aktivointi .env kautta
 app.listen(PORT, () => {
@@ -61,7 +50,7 @@ app.post('/api/persons', (request, response) => {
       error: 'name or number missing' 
     })
   }
-
+/*
   const dublicatePerson = persons.find((person) => person.name === body.name)
 
   if (dublicatePerson) {
@@ -69,12 +58,12 @@ app.post('/api/persons', (request, response) => {
       error: 'name must be unique'
     })
   }
-
-  const person = {
-    id: generateId(),
+*/
+  const person =  new Person ({
+    //id: generateId(),
     name: body.name,
     number: body.number,
-  }
+  })
 
   person.save().then(savedPerson => {
     response.json(savedPerson)
@@ -97,18 +86,14 @@ app.get('/api/persons', (request, response) => {
 
 // info page
 app.get('/info', (request, response) => {
-  const numberOfContacts = persons.length
-  const dateAtnow = new Date()
-  const msg = `Phonebook has info for ${numberOfContacts} people\n` + `${dateAtnow}\n`
-
-  response.set('Content-Type', 'text/plain')
-  response.send(msg)
-})
-
-// tallennettu henkilö indeksissä x
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
+  Person.countDocuments().then(numberOfContacts => {
+    const dateAtnow = new Date();
+    const msg = `Phonebook has info for ${numberOfContacts} people\n${dateAtnow}\n`;
+    response.set('Content-Type', 'text/plain');
+    response.send(msg);
+  }).catch(error => {
+    console.error(error);
+    response.status(500).send('Error retrieving data from the database');
   })
 })
 
