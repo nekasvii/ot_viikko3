@@ -5,11 +5,9 @@
 
 const mongoose = require('mongoose')
 
-if (process.argv.length<5) {
-  console.log('give password as 1. argument')
-  console.log('give name as 2. argument')
-  console.log('give number as 3. argument')
-  process.exit(1)
+if (process.argv.length < 3) {
+    console.log('give password as 1. argument')
+    process.exit(1);
 }
 
 const password = process.argv[2]
@@ -21,23 +19,40 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  phonenumber: String,
+    name: String,
+    phonenumber: String,
 })
-
+  
 const Person = mongoose.model('Person', personSchema)
 
-const person = new Person({
-  name: process.argv[3],
-  phonenumber: process.argv[4],
-})
-
-person.save().then(() => {
-    console.log(person.name + ' saved!')
+if (process.argv.length === 3) { // jos on yksi argumentti
+    console.log('phonebook:')
     Person.find({}).then(result => {
       result.forEach(person => {
         console.log(person.name + ' ' + person.phonenumber);
       })
       mongoose.connection.close()
     })
-})
+
+} else if (process.argv.length === 5) { // jos on 3 argumenttia
+    const person = new Person({
+        name: process.argv[3],
+        phonenumber: process.argv[4],
+    })
+
+    person.save().then(() => {
+        console.log(person.name + ' saved!')
+        Person.find({}).then(result => {
+          result.forEach(person => {
+            console.log(person.name + ' ' + person.phonenumber);
+          })
+          mongoose.connection.close()
+        })
+    })
+
+} else { // muussa tapauksessa
+    console.log('give password as 1. argument')
+    console.log('give name as 2. argument')
+    console.log('give number as 3. argument')
+    process.exit(1)    
+}
