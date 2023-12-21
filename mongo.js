@@ -20,7 +20,7 @@ mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
     name: String,
-    phonenumber: String,
+    number: String,
 })
   
 const Person = mongoose.model('Person', personSchema)
@@ -29,7 +29,7 @@ if (process.argv.length === 3) { // jos on yksi argumentti
     console.log('phonebook:')
     Person.find({}).then(result => {
       result.forEach(person => {
-        console.log(person.name + ' ' + person.phonenumber);
+        console.log(person.name + ' ' + person.number);
       })
       mongoose.connection.close()
     })
@@ -44,7 +44,7 @@ if (process.argv.length === 3) { // jos on yksi argumentti
         console.log(person.name + ' saved!')
         Person.find({}).then(result => {
           result.forEach(person => {
-            console.log(person.name + ' ' + person.phonenumber);
+            console.log(person.name + ' ' + person.number);
           })
           mongoose.connection.close()
         })
