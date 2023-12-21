@@ -1,28 +1,37 @@
-// Teht 3.9-3.11 puhelinluettelon backend step9-11
-// puhelinluettolon toiminnallisuus ajantasalle (ei numeromuutosta)
-// eli aiemman kohdan 2.17 frontendin yhdistäminen kohdan 3.8 backendiin
-// tehty tuotantoa varten optimoitu versio frontendistä dist-kansioon
-// ja määritelty se backend-versioon
-// viety sovellus nettiin oss: https://puhelinluettelo-fullstack3.onrender.com/
-// nyt toimii kaikki operaatiot, mutta lokaalin serverin ollessa päällä
-// lokaalin serverin ollessä kiinni sivun tiedot eivät päivity
-// käsittääkseni tässä vaiheessa ok tilanne
+// Teht 3.13 puhelinluettelon ja tietokanta step1
+// jatketaan työskentelyä puhelinluettelon backendin kanssa
+// tässä vaiheessa koodataan ohjelma hakemaan puh.numerot tietokannasta
+// step2 puh.numerot myös tallennetaan tietokantaan 
 
-const express = require('express')
-const morgan = require('morgan')
-const app = express()
+// const express = require('express')
+// const morgan = require('morgan')
+// const app = express()
+const mongoose = require('mongoose')
 
-app.use(express.static('dist'))
-app.use(express.json((req, res, data) => {
-  req.rawBody = data.toString();
-}))
+// app.use(express.json((req, res, data) => {
+//   req.rawBody = data.toString();
+// }))
 
-morgan.token('body', (req) => {
-  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+// morgan.token('body', (req) => {
+//   return req.method === 'POST' ? JSON.stringify(req.body) : ''
+// })
+
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+const password = process.argv[2]
+
+const url =
+  `mongodb+srv://nellisviili:2nGbwsBjdgMKvjGH@cluster0.awpefb8.mongodb.net/` // TODO: ${password}
+
+mongoose.set('strictQuery', false)
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+    name: String,
+    phonenumber: String,
 })
-
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-
+  
+const Person = mongoose.model('Person', personSchema)
 
 let persons = [  
   {    
@@ -55,7 +64,7 @@ const generateId = () => {
 }
 
 // henkilön lisäys
-app.post('/persons', (request, response) => {
+app.post('/api/persons', (request, response) => {
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -89,9 +98,11 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-// tallennetut henkilöt JSON
-app.get('/persons', (request, response) => {
-  response.json(persons)
+// tallennetut henkilöt MondoDB:stä JSON 
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(person => {
+    response.json(person)
+  })
 })
 
 // info page
@@ -105,7 +116,7 @@ app.get('/info', (request, response) => {
 })
 
 // tallennettu henkilö indeksissä x
-app.get('/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   if (person) {    
@@ -116,7 +127,7 @@ app.get('/persons/:id', (request, response) => {
 })
 
 // henkilön poisto
-app.delete('/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
   
