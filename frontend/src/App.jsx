@@ -159,7 +159,7 @@ const App = () => {
   const hook = () => {
     console.log('effect')
     axios
-      .get('http://localhost:3001/persons')
+      .get('http://localhost:3001/api/persons')
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)

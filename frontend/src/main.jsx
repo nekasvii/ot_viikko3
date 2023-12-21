@@ -5,7 +5,7 @@ import './index.css'
 
 // promisen käyttö, tapana niputtaa
 // then-metodin parametri response sisältää mm. HTTP GET eli datan headerit
-axios.get('http://localhost:3001/persons').then(response => {
+axios.get('http://localhost:3001/api/persons').then(response => {
   const persons = response.data
   console.log(persons)
 })
