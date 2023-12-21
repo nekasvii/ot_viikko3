@@ -5,7 +5,9 @@
 // luotu oma moduulinsa ./models/person 
 // tallennettu ympäristömuuttuja MONGODB_URI .env tiedostoon ja gitignorattu se
 // info-sivun kontaktien lkm-haku päivitetty MongoDB:lle
-// creating_new_person ja get_all_persons -testit OK
+// lisätty henkilön poisto
+// kaikki request testit OK
+// lisätty yksittäisen henkilön näyttäminen
 
 const express = require('express')
 const app = express()
@@ -84,6 +86,18 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+// tallennettu henkilö MondoDB:stä JSON 
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+  })
+})
+
 // info page
 app.get('/info', (request, response) => {
   Person.countDocuments().then(numberOfContacts => {
@@ -97,11 +111,13 @@ app.get('/info', (request, response) => {
   })
 })
 
-/* ei vielä tarpeen
 // henkilön poisto
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-  
-  response.status(204).end()
-}) */
+  Person.findByIdAndDelete(request.params.id).then(result => {
+      if (result) {
+        response.status(204).end(); // kun poistetaan
+      } else {
+        response.status(404).end(); // error 404
+      }
+  })
+})
