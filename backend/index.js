@@ -70,18 +70,6 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.use(unknownEndpoint) // middleware 404 virhekäsittelylle HUOM järjestys
-
-const errorHandler = (error, request, response, next) => {
-  // ...
-}
-
-app.use(errorHandler) // middleware virheellisille pyynnöille
-
 // etusivu
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -131,3 +119,16 @@ app.delete('/api/persons/:id', (request, response, next) => {
   })
   .catch(error => next(error))
 })
+
+// VIRHEKÄSITTELYT
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint) // middleware 404 virhekäsittelylle HUOM järjestys
+
+const errorHandler = (error, request, response, next) => {
+  // ...
+}
+
+app.use(errorHandler) // middleware virheellisille pyynnöille
