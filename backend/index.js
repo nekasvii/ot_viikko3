@@ -1,5 +1,8 @@
-// Teht 3.15 puhelinluettelon ja tietokanta step3
-// siirretty virhekäsittely middlewarelle
+// Teht 3.15 puhelinluettelon ja tietokanta step3 OK
+// teht 3.16 siirretty virhekäsittely middlewarelle OK
+// lisätty henkilön tietojen muutos
+// teht 3.17 olemassa olevan henkilön numeron päivitys (kuten teht 2.18) TODO
+// teht 3.18 polkujen polkujen api/persons/:id ja info toimiminen OK
 
 const express = require('express')
 const cors = require('cors')
@@ -33,6 +36,21 @@ app.listen(PORT, () => {
 
 let persons = [  
 ]
+
+// VIRHEKÄSITTELYN KONSTRUKTORIT
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
 
 const generateId = () => {
   const maxId = persons.length > 0
@@ -120,15 +138,22 @@ app.delete('/api/persons/:id', (request, response, next) => {
   .catch(error => next(error))
 })
 
-// VIRHEKÄSITTELYT
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
+// henkilön muokkaus
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
+  const person = {
+    content: body.content,
+    important: body.important,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
+// VIRHEKÄSITTELY
 app.use(unknownEndpoint) // middleware 404 virhekäsittelylle HUOM järjestys
-
-const errorHandler = (error, request, response, next) => {
-  // ...
-}
-
 app.use(errorHandler) // middleware virheellisille pyynnöille
