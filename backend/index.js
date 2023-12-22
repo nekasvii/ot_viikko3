@@ -1,8 +1,11 @@
-// Teht 3.15 puhelinluettelon ja tietokanta step3 OK
-// teht 3.16 siirretty virhekäsittely middlewarelle OK
-// lisätty henkilön tietojen muutos
-// teht 3.17 olemassa olevan henkilön numeron päivitys (kuten teht 2.15) OK
-// teht 3.18 polkujen polkujen api/persons/:id ja info toimiminen OK
+// Teht 3.19 puhelinluettelon ja tietokanta step7
+// validaatio: nimen oltava min 3 merkkiä pitkä
+//   laajennus myös frontendiin: virheilmo validoinnin epäonnistuessa
+// teht 3.20 validaatio oikean muotoisille numeroille:
+//   - min 8 merkkiä pitkiä
+//   - koostuu kahdesta väliviivalla erotetusta osasta
+//     - eka osa 2 tai 3 merkkiä pitkä, tokassa osassa min 6 tai 5 merkkiä
+// teht 3.21 fullstack toimii netissä ja backend lokaalistikin
 
 const express = require('express')
 const cors = require('cors')
@@ -47,10 +50,22 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {    // kun syöte ei ole validaatiosäädösten mukainen
+    return response.status(400).json({ error: error.message })  
   }
 
   next(error)
 }
+
+// määritellään person-olion validointisäädökset
+const personSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlenght: 3,
+    required: true
+  },
+  number: String
+})
 
 const generateId = () => {
   const maxId = persons.length > 0
@@ -60,14 +75,9 @@ const generateId = () => {
 }
 
 // henkilön lisäys
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name or number missing' 
-    })
-  }
 /*
   const dublicatePerson = persons.find((person) => person.name === body.name)
 
@@ -86,6 +96,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
 
 // etusivu
@@ -142,18 +153,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
 
-  const person = {
-    name,
-    number,
-  }
+  Person.findByIdAndUpdate(
+    request.params.id, 
+    { name, number }, 
+    { new: true, runValidators: true, context: 'query' }
+    )
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
-    .then(updatedPerson => {
-      if (updatedPerson) {
-        response.json(updatedPerson);
-      } else {
-        response.status(404).end();
-      }
+    .then(updatedNote => {
+      response.json(updatedNote)
     })
     .catch(error => next(error))
 })
