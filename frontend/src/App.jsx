@@ -2,6 +2,7 @@
 // tehdään parempi virheilmoitus samaisella logiikalla
 // kuin edellisen vaiheen tietojenpäivitysilmoitukset
 // luotu uusi komponentti Error huolehtimaan virheilmoituksista käyttäjälle
+// teht 3.17-.18 lisätty virheilmoitukset virheellisille käyttäjäsyötteille
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -95,6 +96,24 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          const errorMessage = error.response.data.error;
+
+          if (errorMessage.includes('number')) {
+            setErrorMessage(
+              `Number is not valid. Should be in the format 12-345678.. or 123-45678..`
+            )
+          } else {
+            setErrorMessage(
+              `Name is not valid. Should be longer than the minimum length (3)`
+            )
+          }
+          console.log(error.response.data)
+
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000 )
+        })
       
       console.log("saved ", newName, newNumber)
       console.log(persons)
@@ -159,7 +178,7 @@ const App = () => {
   const hook = () => {
     console.log('effect')
     axios
-      .get('http://localhost:3001/api/persons')
+      .get('/api/persons')
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
