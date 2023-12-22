@@ -1,4 +1,4 @@
-// Teht 3.17 personSchema-validointia
+// Teht 3.17 ja 3.18 personSchema-validointia
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
@@ -21,7 +21,17 @@ const personSchema = new mongoose.Schema({
     minlength: 3,
     required: true
   },
-  number: String
+  number: {
+    type: String,
+    validate: {
+      validator: function(v) {
+        // onko muotoa 2-3 numeroa, väliviiva, min 5-6 numeroa
+        return /^\d{2,3}-\d{5,6}$/.test(v);
+      },
+      message: props => `${props.value} is not a valid number. Should be in the format 12-345678.. or 123-45678..`
+    },
+    required: true
+  }
 })
 
 personSchema.set('toJSON', {
