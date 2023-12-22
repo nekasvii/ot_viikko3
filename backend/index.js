@@ -1,11 +1,11 @@
 // Teht 3.19 puhelinluettelon ja tietokanta step7 OK
 // validaatio: nimen oltava min 3 merkkiä pitkä
 //   laajennus myös frontendiin: virheilmo validoinnin epäonnistuessa
-// teht 3.20 validaatio oikean muotoisille numeroille: 
+// teht 3.20 validaatio oikean muotoisille numeroille: OK
 //   - min 8 merkkiä pitkiä
 //   - koostuu kahdesta väliviivalla erotetusta osasta
 //     - eka osa 2 tai 3 merkkiä pitkä, tokassa osassa min 6 tai 5 merkkiä
-// teht 3.21 fullstack toimii netissä ja backend lokaalistikin
+// teht 3.21 fullstack toimii netissä OK
 
 const express = require('express')
 const cors = require('cors')
