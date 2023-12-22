@@ -57,16 +57,6 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-// määritellään person-olion validointisäädökset
-const personSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minlength: 3,
-    required: true
-  },
-  number: String
-})
-
 const generateId = () => {
   const maxId = persons.length > 0
     ? Math.max(...persons.map(n => n.id))
