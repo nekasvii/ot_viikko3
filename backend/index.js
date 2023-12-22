@@ -61,7 +61,7 @@ const errorHandler = (error, request, response, next) => {
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlenght: 3,
+    minlength: 3,
     required: true
   },
   number: String
