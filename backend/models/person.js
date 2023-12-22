@@ -23,6 +23,7 @@ const personSchema = new mongoose.Schema({
   },
   number: {
     type: String,
+    minlength: 9, // min 8 numero ja yksi väliviiva
     validate: {
       validator: function(v) {
         // onko muotoa 2-3 numeroa, väliviiva, min 5-6 numeroa
