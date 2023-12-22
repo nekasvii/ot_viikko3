@@ -1,15 +1,5 @@
-// Teht 3.13 puhelinluettelon ja tietokanta step1
-// jatketaan työskentelyä puhelinluettelon backendin kanssa
-// tässä vaiheessa koodataan ohjelma hakemaan puh.numerot tietokannasta
-// step2 puh.numerot myös tallennetaan tietokantaan 
-// luotu oma moduulinsa ./models/person 
-// tallennettu ympäristömuuttuja MONGODB_URI .env tiedostoon ja gitignorattu se
-// info-sivun kontaktien lkm-haku päivitetty MongoDB:lle
-// lisätty henkilön poisto
-// kaikki request testit OK
-// lisätty yksittäisen henkilön näyttäminen
-// renderin kanssa ongelmaa MongoDB salasanan takia
-// -> ratkottu tallentamalla Renderiin uri ympäristömuuttujana
+// Teht 3.15 puhelinluettelon ja tietokanta step3
+// siirretty virhekäsittely middlewarelle
 
 const express = require('express')
 const cors = require('cors')
@@ -20,8 +10,11 @@ require('dotenv').config() // ympäristömuuttuja käyttöön ennen ./models/per
 const Person = require('./models/person') // ottaa modulin käyttöön
 
 app.use(cors())
-app.use(express.json())
+
 app.use(express.static('dist'))
+app.use(express.json((req, res, data) => {
+  req.rawBody = data.toString();
+}))
 /*
 morgan.token('body', (req) => {
   return req.method === 'POST' ? JSON.stringify(req.body) : ''
@@ -77,6 +70,18 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint) // middleware 404 virhekäsittelylle HUOM järjestys
+
+const errorHandler = (error, request, response, next) => {
+  // ...
+}
+
+app.use(errorHandler) // middleware virheellisille pyynnöille
+
 // etusivu
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -97,10 +102,12 @@ app.get('/api/persons/:id', (request, response, next) => {
     .then(person => {
       if (person) {
         response.json(person)
-      } else {
-        response.status(404).end()
+      } else { // jos person=null 
+        response.status(404).end() // 404 Not Found
       }
-  })
+    })
+    .catch(error => next(error)) // siirretään virhekäsittely middlewareen
+  
 })
 
 // info page
@@ -117,12 +124,10 @@ app.get('/info', (request, response) => {
 })
 
 // henkilön poisto
-app.delete('/api/persons/:id', (request, response) => {
-  Person.findByIdAndDelete(request.params.id).then(result => {
-      if (result) {
-        response.status(204).end(); // kun poistetaan
-      } else {
-        response.status(404).end(); // error 404
-      }
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+  .then(result => {
+    response.status(204).end() // 204 No Content 
   })
+  .catch(error => next(error))
 })
