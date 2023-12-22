@@ -1,7 +1,7 @@
 // Teht 3.15 puhelinluettelon ja tietokanta step3 OK
 // teht 3.16 siirretty virhekäsittely middlewarelle OK
 // lisätty henkilön tietojen muutos
-// teht 3.17 olemassa olevan henkilön numeron päivitys (kuten teht 2.18) TODO
+// teht 3.17 olemassa olevan henkilön numeron päivitys (kuten teht 2.15) TODO
 // teht 3.18 polkujen polkujen api/persons/:id ja info toimiminen OK
 
 const express = require('express')
@@ -138,13 +138,13 @@ app.delete('/api/persons/:id', (request, response, next) => {
   .catch(error => next(error))
 })
 
-// henkilön muokkaus
+// henkilön muokkaus: ei nappulaa, ei käytössä
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
   const person = {
-    content: body.content,
-    important: body.important,
+    name: body.content,
+    number: body.important,
   }
 
   Person.findByIdAndUpdate(request.params.id, person, { new: true })
