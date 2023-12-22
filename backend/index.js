@@ -140,14 +140,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 // henkilön muokkaus: ei nappulaa, ei käytössä
 app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body
+  const { name, number } = request.body
 
   const person = {
-    name: body.content,
-    number: body.content,
+    name,
+    number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       if (updatedPerson) {
         response.json(updatedPerson);
